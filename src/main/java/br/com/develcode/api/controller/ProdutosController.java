@@ -26,7 +26,7 @@ public class ProdutosController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosProdutos dados, UriComponentsBuilder uriBuilder){
+    public ResponseEntity cadastrarProdutos(@RequestBody @Valid DadosProdutos dados, UriComponentsBuilder uriBuilder){
         var produtos = new Produtos(dados);
         repository.save(new Produtos(dados));
 
@@ -44,7 +44,7 @@ public class ProdutosController {
     }
 
     @PutMapping @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoProdutos dados){
+    public ResponseEntity atualizarProdutos(@RequestBody @Valid DadosAtualizacaoProdutos dados){
         var produtos = repository.getReferenceById(dados.id());
         produtos.atualizarCaracteristicas(dados);
 ;
@@ -52,7 +52,7 @@ public class ProdutosController {
     }
 
     @DeleteMapping("/{id}") @Transactional
-    public ResponseEntity excluir(@PathVariable Long id){
+    public ResponseEntity excluirProdutos(@PathVariable Long id){
         var produtos = repository.getReferenceById((id));
         produtos.excluir();
 

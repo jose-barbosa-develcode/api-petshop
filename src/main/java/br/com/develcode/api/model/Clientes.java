@@ -1,6 +1,7 @@
 package br.com.develcode.api.model;
 
 
+import br.com.develcode.api.clientes.DadosCliente;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,6 +19,16 @@ public class Clientes {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    private String cep;
     private int idade;
 
+    private Boolean ativo;
+
+
+    public Clientes(DadosCliente dadosCliente) {
+        this.nome = dadosCliente.nome();
+        this.cep = dadosCliente.cep();
+        this.idade = dadosCliente.idade();
+        this.ativo = true;
+    }
 }
