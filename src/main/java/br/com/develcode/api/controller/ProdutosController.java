@@ -47,7 +47,7 @@ public class ProdutosController {
     public ResponseEntity atualizarProdutos(@RequestBody @Valid DadosAtualizacaoProdutos dados){
         var produtos = repository.getReferenceById(dados.id());
         produtos.atualizarCaracteristicas(dados);
-;
+
         return ResponseEntity.ok(new DadosDetalhamentoProdutos(produtos));
     }
 
