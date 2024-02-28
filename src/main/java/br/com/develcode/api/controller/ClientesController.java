@@ -4,6 +4,7 @@ package br.com.develcode.api.controller;
 import br.com.develcode.api.clientes.DadosCliente;
 import br.com.develcode.api.clientes.DadosDetalhamentoClientes;
 import br.com.develcode.api.model.Clientes;
+import br.com.develcode.api.produtos.DadosAtualizacaoProdutos;
 import br.com.develcode.api.produtos.DadosDetalhamentoProdutos;
 import br.com.develcode.api.repository.ClientesRepository;
 import jakarta.transaction.Transactional;
@@ -38,6 +39,22 @@ public class ClientesController {
     public ResponseEntity <Page<DadosDetalhamentoClientes>> listar(@PageableDefault(sort = {"Idade"})Pageable paginacao){
         var page = repository.findAllByAtivoTrue(paginacao).map((DadosDetalhamentoClientes::new));
         return  ResponseEntity.ok(page);
+    }
+
+    @DeleteMapping("/{id}") @Transactional
+    public ResponseEntity excluirClientes(@PathVariable Long id){
+        var produtos = repository.getReferenceById((id));
+        produtos.excluir();
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping @Transactional
+    public ResponseEntity atualizarProdutos(@RequestBody @Valid DadosDetalhamentoClientes dados){
+        var clientes = repository.getReferenceById(dados.id());
+        clientes.atualizarCaracteristicas(dados);
+
+        return ResponseEntity.ok(new DadosDetalhamentoClientes(clientes));
     }
 
 
