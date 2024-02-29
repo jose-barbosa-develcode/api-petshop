@@ -5,6 +5,7 @@ CREATE table produtos(
                          valor decimal(10,2),
                          tipos varchar(100),
 
+
                          primary key(id)
 
 
