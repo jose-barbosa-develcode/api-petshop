@@ -22,19 +22,25 @@ public class Carrinho {
     private BigDecimal valorTotal;
     private Integer quantidade;
 
-    @OneToOne
+    @OneToOne @JoinColumn(name = "cliente_id")
     private Clientes clientes;
 
-    @OneToMany(mappedBy = "carrinho")
+
+    @OneToMany(mappedBy = "carrinho", cascade = CascadeType.ALL)
     private List<ItemCarrinho> itens = new ArrayList<>();
 
 
-    public void adicionarItem(ItemCarrinho item) {
 
-
-    }
-
-    public Carrinho(Clientes clientes){
-        this.clientes = clientes;
-    }
+//    public void adicionarItem(ItemCarrinho item) {
+//        this.itens.add(item);
+//
+//    }
+//
+//    public Carrinho(Clientes clientes){
+//        this.clientes = clientes;
+//    }
 }
+
+
+
+

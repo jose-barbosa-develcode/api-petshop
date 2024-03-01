@@ -10,3 +10,4 @@ CREATE table item_carrinho(
 
 
 );
+

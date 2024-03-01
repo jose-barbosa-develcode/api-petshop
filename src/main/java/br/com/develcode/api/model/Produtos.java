@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Table(name = "produtos")
@@ -20,7 +22,8 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(of = "id")
 public class Produtos {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String descricao;
@@ -41,21 +44,24 @@ public class Produtos {
     private Boolean ativo;
 
     public void atualizarCaracteristicas(DadosAtualizacaoProdutos dados) {
-        if (dados.nome() != null){
+        if (dados.nome() != null) {
             this.nome = dados.nome();
         }
-        if (dados.descricao() != null){
+        if (dados.descricao() != null) {
             this.descricao = dados.descricao();
         }
-        if (dados.valor() != null){
+        if (dados.valor() != null) {
             this.valor = dados.valor();
         }
-        if (dados.tipos() != null){
+        if (dados.tipos() != null) {
             this.tipos = dados.tipos();
         }
-        }
+    }
 
     public void excluir() {
         this.ativo = false;
     }
+
+
 }
+
