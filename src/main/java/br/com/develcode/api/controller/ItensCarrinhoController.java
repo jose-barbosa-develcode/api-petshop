@@ -23,15 +23,6 @@ public class ItensCarrinhoController {
     private CarrinhoRepository repository;
 
 
-
-
-//    @GetMapping
-//    public ResponseEntity <Page<ItemCarrinhoSelecionados>> listar(@PageableDefault(sort = {"quantidade"}) Pageable paginacao){
-//        var page = repository.findAll(paginacao).map(ItemCarrinhoSelecionados::new);
-//        return ResponseEntity.ok(page);
-//
-//    }
-
         private final CarrinhoService carrinhoService;
 
         public ItensCarrinhoController(CarrinhoService carrinhoService) {

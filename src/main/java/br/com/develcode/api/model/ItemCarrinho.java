@@ -1,6 +1,8 @@
 package br.com.develcode.api.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,13 +17,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class ItemCarrinho {
 
+public class ItemCarrinho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer quantidade;
     private BigDecimal precoUnitario;
+
+
 
     public ItemCarrinho(Integer quantidade, BigDecimal precoUnitario, Carrinho carrinho, Produtos produtos) {
         this.quantidade = quantidade;
@@ -39,5 +43,8 @@ public class ItemCarrinho {
     @JoinColumn(name = "carrinho_id")
     private Carrinho carrinho;
 
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Clientes cliente;
 
 }

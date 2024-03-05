@@ -51,7 +51,7 @@ public class ClientesController {
 
     @PutMapping @Transactional
     public ResponseEntity atualizarProdutos(@RequestBody @Valid DadosDetalhamentoClientes dados){
-        var clientes = repository.getReferenceById(dados.id());
+        var clientes = repository.getReferenceById(dados.idCliente());
         clientes.atualizarCaracteristicas(dados);
 
         return ResponseEntity.ok(new DadosDetalhamentoClientes(clientes));
