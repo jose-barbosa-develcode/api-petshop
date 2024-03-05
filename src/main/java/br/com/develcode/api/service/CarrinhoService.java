@@ -49,7 +49,6 @@ import java.math.BigDecimal;
         Carrinho carrinho = new Carrinho();
         carrinho.setClientes(clientes);
         carrinho.setValorTotal(BigDecimal.valueOf(0.00));
-            carrinho.setQuantidade(0);
 
         return carrinhoRepository.save(carrinho);
     }

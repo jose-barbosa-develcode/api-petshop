@@ -5,11 +5,11 @@ import br.com.develcode.api.model.ItemCarrinho;
 
 import java.math.BigDecimal;
 
-public record ItemCarrinhoSelecionados(Long idProdutos, Integer quantidade, BigDecimal valorTotal) {
+public record ItemCarrinhoSelecionados(Long idProdutos, BigDecimal valorTotal) {
 
 
     public ItemCarrinhoSelecionados(Carrinho carrinho) {
-        this(carrinho.getId(), carrinho.getQuantidade(), carrinho.getValorTotal());
+        this(carrinho.getId(), carrinho.getValorTotal());
 
     }
 }

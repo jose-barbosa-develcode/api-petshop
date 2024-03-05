@@ -22,7 +22,6 @@ public class Carrinho {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BigDecimal valorTotal;
-    private Integer quantidade;
 
     @OneToOne @JoinColumn(name = "cliente_id")
     @JsonIgnoreProperties("carrinho")
