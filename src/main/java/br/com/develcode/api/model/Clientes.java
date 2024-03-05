@@ -3,6 +3,7 @@ package br.com.develcode.api.model;
 
 import br.com.develcode.api.clientes.DadosCliente;
 import br.com.develcode.api.clientes.DadosDetalhamentoClientes;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,10 @@ public class Clientes {
 
     @OneToOne(mappedBy = "clientes", cascade = CascadeType.ALL)
     private Carrinho carrinho;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "clientes")
+
 
 
 

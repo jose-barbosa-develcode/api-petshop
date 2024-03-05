@@ -1,5 +1,7 @@
 package br.com.develcode.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +25,7 @@ public class Carrinho {
     private Integer quantidade;
 
     @OneToOne @JoinColumn(name = "cliente_id")
+    @JsonIgnoreProperties("carrinho")
     private Clientes clientes;
 
 
