@@ -1,1 +1,0 @@
-alter table item_carrinho add cliente_id bigint not null;
