@@ -16,12 +16,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "idItensCarrinho")
 
 public class ItemCarrinho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idItensCarrinho;
     private Integer quantidade;
     private BigDecimal precoUnitario;
 
@@ -46,5 +46,11 @@ public class ItemCarrinho {
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Clientes cliente;
+
+    @ManyToOne
+    @JoinColumn(name = "compra_id")
+    private Compra compra;
+
+
 
 }

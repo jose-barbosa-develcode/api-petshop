@@ -42,7 +42,19 @@ public class ItensCarrinhoController {
         public List<ItemCarrinho> listarItensCarrinho() {
             return itemCarrinhoRepository.findAll();
     }
+
+        @GetMapping("/clientes/{clienteId}/carrinho/itens")
+         public ResponseEntity<List<ItemCarrinho>> visualizarItensDoCarrinho(@PathVariable Long clienteId) {
+         List<ItemCarrinho> itensDoCarrinho = carrinhoService.obterItensDoCarrinho(clienteId);
+            return ResponseEntity.ok(itensDoCarrinho);
+    }
+
+
+
 }
+
+
+
 
 
 

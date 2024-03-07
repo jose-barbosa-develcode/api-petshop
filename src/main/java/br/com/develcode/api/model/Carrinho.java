@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -16,11 +17,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "idCarrinho")
 public class Carrinho {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idCarrinho;
     private BigDecimal valorTotal;
 
     @OneToOne @JoinColumn(name = "cliente_id")
@@ -28,19 +29,15 @@ public class Carrinho {
     private Clientes clientes;
 
 
+    public Long getId() {
+        return idCarrinho;
+    }
+
     @OneToMany(mappedBy = "carrinho", cascade = CascadeType.ALL)
-    private List<ItemCarrinho> itens = new ArrayList<>();
+    @JsonIgnore
+    private List<ItemCarrinho> itens;
 
 
-
-//    public void adicionarItem(ItemCarrinho item) {
-//        this.itens.add(item);
-//
-//    }
-//
-//    public Carrinho(Clientes clientes){
-//        this.clientes = clientes;
-//    }
 }
 
 

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public record DadosListagemProdutos(Long id, String nome, String descricao, BigDecimal valor) {
 
     public DadosListagemProdutos(Produtos produtos){
-        this(produtos.getId(), produtos.getNome(), produtos.getDescricao(), produtos.getValor());
+        this(produtos.getIdProdutos(), produtos.getNome(), produtos.getDescricao(), produtos.getValor());
     }
 
 }

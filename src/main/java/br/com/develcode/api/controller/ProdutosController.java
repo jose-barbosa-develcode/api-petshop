@@ -30,7 +30,7 @@ public class ProdutosController {
         var produtos = new Produtos(dados);
         repository.save(new Produtos(dados));
 
-        var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(produtos.getId()).toUri();
+        var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(produtos.getIdProdutos()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoProdutos(produtos));
 
 

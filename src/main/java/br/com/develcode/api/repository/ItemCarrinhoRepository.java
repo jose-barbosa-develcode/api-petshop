@@ -16,7 +16,7 @@ public interface ItemCarrinhoRepository extends JpaRepository<ItemCarrinho, Long
 
 
     List<ItemCarrinho> findByClienteId(Long clienteId);
-    @Query("SELECT i FROM ItemCarrinho i WHERE i.carrinho.id = :carrinhoId")
+    @Query("SELECT i FROM ItemCarrinho i WHERE i.carrinho.idCarrinho = :carrinhoId")
     List<ItemCarrinho> findByCarrinhoId(@Param("carrinhoId") Long carrinhoId);
 }
 
