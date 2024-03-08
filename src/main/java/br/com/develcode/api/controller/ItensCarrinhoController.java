@@ -29,11 +29,6 @@ public class ItensCarrinhoController {
             this.carrinhoService = carrinhoService;
         }
 
-        @PostMapping("/adicionar/{idProduto}")
-        public ResponseEntity<ItemCarrinho> adicionarProdutoAoCarrinho(@PathVariable Long idProduto, @RequestParam int quantidade) {
-            ItemCarrinho itemCarrinho = carrinhoService.adicionarProdutoAoCarrinho(idProduto, quantidade);
-            return ResponseEntity.ok(itemCarrinho);
-        }
 
         @Autowired
         private ItemCarrinhoRepository itemCarrinhoRepository;

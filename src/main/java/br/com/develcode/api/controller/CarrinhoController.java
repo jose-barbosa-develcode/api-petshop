@@ -46,57 +46,23 @@ public class CarrinhoController {
     }
 
     @PostMapping("/{clienteId}/novo")
-    public ResponseEntity<Carrinho> iniciarNovoCarrinho(@PathVariable Long clienteId) {
+    public ResponseEntity<Carrinho> iniciarNovoCarrinhoParaCliente(@PathVariable Long clienteId) {
         Carrinho carrinho = carrinhoService.iniciarNovoCarrinho(clienteId);
         return ResponseEntity.ok(carrinho);
     }
 
 
-    @GetMapping("/carrinhos")
-    public List<Carrinho> visualizarCarrinhos() {
-        List<Carrinho> carrinhos = carrinhoRepository.findAll();
 
-        Set<Clientes> clientes = carrinhos.stream()
-                .map(Carrinho::getClientes)
-                .collect(Collectors.toSet());
-
-
-        clientes.forEach(cliente -> cliente.setCarrinho(null));
-
-        return carrinhos;
-    }
-
-
-
-
-    @PostMapping("/clientes/{clienteId}/carrinho/produtos/{produtoId}")
+    @PostMapping("/clientes/{clienteId}/produto/{produtoId}")
     public ResponseEntity<Map<String, Object>> adicionarProdutoAoCarrinho(@PathVariable Long clienteId, @PathVariable Long produtoId, @RequestParam int quantidade) {
-
         Clientes cliente = clientesRepository.findById(clienteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID: " + clienteId));
 
         Produtos produto = produtosRepository.findById(produtoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com o ID: " + produtoId));
 
-        List<ItemCarrinho> itensDoCarrinho = itemCarrinhoRepository.findByClienteId(clienteId);
-        Optional<ItemCarrinho> itemExistenteOptional = itensDoCarrinho.stream()
-                .filter(item -> item.getProdutos().getIdProdutos().equals(produtoId))
-                .findFirst();
+        Carrinho carrinho = carrinhoService.adicionarProdutoAoCarrinho(cliente, produto, quantidade);
 
-        if (itemExistenteOptional.isPresent()) {
-            ItemCarrinho itemExistente = itemExistenteOptional.get();
-            int novaQuantidade = itemExistente.getQuantidade() + quantidade;
-            itemExistente.setQuantidade(novaQuantidade);
-            itemCarrinhoRepository.save(itemExistente);
-        } else {
-            ItemCarrinho itemCarrinho = new ItemCarrinho();
-            itemCarrinho.setCliente(cliente);
-            itemCarrinho.setProdutos(produto);
-            itemCarrinho.setQuantidade(quantidade);
-            itemCarrinhoRepository.save(itemCarrinho);
-        }
-
-        Carrinho carrinho = carrinhoService.buscarCarrinhoPorCliente(clienteId);
         Map<String, Object> response = new HashMap<>();
         response.put("carrinho", carrinho);
         response.put("itens", carrinho.getItens());
@@ -107,38 +73,20 @@ public class CarrinhoController {
 
 
     @PutMapping("/clientes/{clienteId}/carrinho/produtos/{produtoId}")
-    public ResponseEntity<Void> subtrairQuantidadeDoProdutoNoCarrinho(@PathVariable Long clienteId, @PathVariable Long produtoId, @RequestParam int quantidade) {
-
+    public ResponseEntity<Void> removerProdutoNoCarrinho(@PathVariable Long clienteId, @PathVariable Long produtoId, @RequestParam int quantidade) {
         Clientes cliente = clientesRepository.findById(clienteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID: " + clienteId));
-
 
         Produtos produto = produtosRepository.findById(produtoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com o ID: " + produtoId));
 
+        carrinhoService.removerProdutoNoCarrinho(cliente, produto, quantidade);
 
-        List<ItemCarrinho> itensDoCarrinho = itemCarrinhoRepository.findByClienteId(clienteId);
-        Optional<ItemCarrinho> itemExistenteOptional = itensDoCarrinho.stream()
-                .filter(item -> item.getProdutos().getIdProdutos().equals(produtoId))
-                .findFirst();
-
-
-        if (itemExistenteOptional.isPresent()) {
-            ItemCarrinho itemExistente = itemExistenteOptional.get();
-            int novaQuantidade = itemExistente.getQuantidade() - quantidade;
-            if (novaQuantidade <= 0) {
-
-                itemCarrinhoRepository.delete(itemExistente);
-            } else {
-
-                itemExistente.setQuantidade(novaQuantidade);
-                itemCarrinhoRepository.save(itemExistente);
-            }
-            return ResponseEntity.ok().build();
-        } else {
-            throw new ResourceNotFoundException("Produto não encontrado no carrinho do cliente.");
-        }
+        return ResponseEntity.ok().build();
     }
+
+
+
 
     @DeleteMapping("/clientes/{clienteId}/carrinho/produtos")
     public ResponseEntity<Void> removerTodosProdutosDoCarrinho(@PathVariable Long clienteId) {
@@ -155,7 +103,6 @@ public class CarrinhoController {
             item.getProdutos().setIdProdutos(0L);
         }
 
-        // Salva os itens do carrinho atualizados no repositório
         itemCarrinhoRepository.saveAll(itensDoCarrinho);
 
         return ResponseEntity.ok().build();
@@ -163,57 +110,18 @@ public class CarrinhoController {
 
 
 
+
     @GetMapping("/clientes/{clienteId}/carrinho")
-    public ResponseEntity<Object> visualizarCarrinhoDoCliente(@PathVariable Long clienteId) {
-
-
-        Clientes cliente = clientesRepository.findById(clienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID: " + clienteId));
-
-        Carrinho carrinho = cliente.getCarrinho();
-        if (carrinho == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        List<ItemCarrinho> itensDoCarrinho = itemCarrinhoRepository.findByClienteId(clienteId);
-
-
-        BigDecimal valorTotal = BigDecimal.ZERO;
-        for (ItemCarrinho item : itensDoCarrinho) {
-            BigDecimal precoUnitario = item.getProdutos().getValor();
-            BigDecimal quantidade = BigDecimal.valueOf(item.getQuantidade());
-            valorTotal = valorTotal.add(precoUnitario.multiply(quantidade));
-        }
-
-        carrinho.setValorTotal(valorTotal);
-        carrinhoRepository.save(carrinho);
-
-        CarrinhoComItens carrinhoComItens = new CarrinhoComItens(carrinho, itensDoCarrinho, valorTotal);
-
-
+    public ResponseEntity<Object> visualizarCarrinhoDoClienteComValorTotal(@PathVariable Long clienteId) {
+        CarrinhoComItens carrinhoComItens = carrinhoService.visualizarCarrinhoDoClienteComValorTotal(clienteId);
         return ResponseEntity.ok(carrinhoComItens);
     }
 
 
-
-
-
     @GetMapping("/clientes/{clienteId}/carrinho/itens")
-    public ResponseEntity<List<ItemCarrinho>> visualizarItensDoCarrinho(@PathVariable Long clienteId) {
-
-        Clientes cliente = clientesRepository.findById(clienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID: " + clienteId));
-
-        List<ItemCarrinho> itensDoCarrinho = itemCarrinhoRepository.findByClienteId(clienteId);
-
-
-        boolean todosItensZerados = itensDoCarrinho.stream().allMatch(item -> item.getQuantidade() == 0);
-
-        if (todosItensZerados) {
-            return ResponseEntity.ok(Collections.emptyList());
-        } else {
-            return ResponseEntity.ok(itensDoCarrinho);
-        }
+    public ResponseEntity<List<ItemCarrinho>> visualizarCarrinhoDoCliente(@PathVariable Long clienteId) {
+        List<ItemCarrinho> itensDoCarrinho = carrinhoService.visualizarItensDoCarrinho(clienteId);
+        return ResponseEntity.ok(itensDoCarrinho);
     }
 
 
