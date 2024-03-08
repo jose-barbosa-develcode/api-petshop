@@ -3,12 +3,11 @@ package br.com.develcode.api.service;
 import br.com.develcode.api.carrinho.CarrinhoComItens;
 import br.com.develcode.api.model.*;
 import br.com.develcode.api.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,41 +111,12 @@ import java.util.Optional;
         return new CarrinhoComItens(carrinho, itensDoCarrinho, valorTotal);
     }
 
-    public List<ItemCarrinho> visualizarItensDoCarrinho(Long clienteId) {
-        Clientes cliente = clientesRepository.findById(clienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID: " + clienteId));
-
-        List<ItemCarrinho> itensDoCarrinho = itemCarrinhoRepository.findByClienteId(clienteId);
-
-        boolean todosItensZerados = itensDoCarrinho.stream().allMatch(item -> item.getQuantidade() == 0);
-
-        if (todosItensZerados) {
-            return Collections.emptyList();
-        } else {
-            return itensDoCarrinho;
-        }
-    }
-
-
-
-
-
-
 
 
     public List<ItemCarrinho> obterItensDoCarrinho(Long carrinhoId) {
         return itemCarrinhoRepository.findByCarrinhoId(carrinhoId);
     }
 
-
-    public void descartarCarrinho(Long carrinhoId) {
-        Carrinho carrinho = carrinhoRepository.findById(carrinhoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado com o ID: " + carrinhoId));
-        
-        carrinho.getItens().clear();
-        carrinho.setValorTotal(BigDecimal.ZERO);
-        carrinhoRepository.save(carrinho);
-    }
 
     public void finalizarCompra(Long carrinhoId) {
         Carrinho carrinho = carrinhoRepository.findById(carrinhoId)
@@ -185,14 +155,28 @@ import java.util.Optional;
     }
 
 
-    public void limparCarrinho(Long carrinhoId) {
-        Carrinho carrinho = carrinhoRepository.findById(carrinhoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado com o ID: " + carrinhoId));
+
+
+    public void removerTodosProdutosDoCarrinho(Long clienteId) {
+        Clientes cliente = clientesRepository.findById(clienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID: " + clienteId));
+
+        List<ItemCarrinho> itensDoCarrinho = itemCarrinhoRepository.findByClienteId(clienteId);
+
+        for (ItemCarrinho item : itensDoCarrinho) {
+            item.setQuantidade(0);
+        }
+
+        itemCarrinhoRepository.saveAll(itensDoCarrinho);
+    }
+
+    @Transactional
+    public void excluirCarrinhoDoCliente(Long clienteId) {
+        Carrinho carrinho = carrinhoRepository.findByClienteId(clienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado para o cliente com o ID: " + clienteId));
 
         carrinho.getItens().clear();
-        carrinho.setValorTotal(BigDecimal.ZERO);
-
-        carrinhoRepository.save(carrinho);
+        carrinhoRepository.delete(carrinho);
     }
 
 
