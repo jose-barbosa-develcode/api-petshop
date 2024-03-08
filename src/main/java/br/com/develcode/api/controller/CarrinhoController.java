@@ -87,27 +87,13 @@ public class CarrinhoController {
 
 
 
-
     @DeleteMapping("/clientes/{clienteId}/carrinho/produtos")
     public ResponseEntity<Void> removerTodosProdutosDoCarrinho(@PathVariable Long clienteId) {
-
-        Clientes cliente = clientesRepository.findById(clienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID: " + clienteId));
-
-        List<ItemCarrinho> itensDoCarrinho = itemCarrinhoRepository.findByClienteId(clienteId);
-
-
-        for (ItemCarrinho item : itensDoCarrinho) {
-            item.setQuantidade(0);
-
-            item.getProdutos().setIdProdutos(0L);
-        }
-
-        itemCarrinhoRepository.saveAll(itensDoCarrinho);
+        carrinhoService.removerTodosProdutosDoCarrinho(clienteId);
+        carrinhoService.excluirCarrinhoDoCliente(clienteId);
 
         return ResponseEntity.ok().build();
     }
-
 
 
 
@@ -118,26 +104,12 @@ public class CarrinhoController {
     }
 
 
-    @GetMapping("/clientes/{clienteId}/carrinho/itens")
-    public ResponseEntity<List<ItemCarrinho>> visualizarCarrinhoDoCliente(@PathVariable Long clienteId) {
-        List<ItemCarrinho> itensDoCarrinho = carrinhoService.visualizarItensDoCarrinho(clienteId);
-        return ResponseEntity.ok(itensDoCarrinho);
-    }
-
 
     @PostMapping("/finalizar/{carrinhoId}")
     public ResponseEntity<String> finalizarCompra(@PathVariable Long carrinhoId) {
         carrinhoService.finalizarCompra(carrinhoId);
         return ResponseEntity.ok("Compra finalizada com sucesso!");
     }
-
-
-    @DeleteMapping("/carrinhos/{carrinhoId}")
-    public ResponseEntity<?> descartarCarrinho1(@PathVariable Long carrinhoId) {
-        carrinhoService.limparCarrinho(carrinhoId);
-        return ResponseEntity.ok().build();
-    }
-
 
 
 }
