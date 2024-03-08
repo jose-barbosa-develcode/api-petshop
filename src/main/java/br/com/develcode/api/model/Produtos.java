@@ -4,10 +4,7 @@ import br.com.develcode.api.produtos.DadosAtualizacaoProdutos;
 import br.com.develcode.api.produtos.DadosProdutos;
 import br.com.develcode.api.produtos.Tipos;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import java.util.List;
 @Table(name = "produtos")
 @Entity(name = "Produtos")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "idProdutos")

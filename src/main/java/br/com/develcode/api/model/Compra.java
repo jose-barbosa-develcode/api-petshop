@@ -24,7 +24,7 @@ public class Compra {
     @JoinColumn(name = "carrinho_id")
     private Carrinho carrinho;
 
-    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ItemCarrinho> itens = new ArrayList<>();
 
 

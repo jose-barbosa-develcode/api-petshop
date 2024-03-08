@@ -1,14 +1,11 @@
 package br.com.develcode.api.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "item_carrinho")
 @Entity(name = "ItemCarrinho")
@@ -21,8 +18,10 @@ import java.util.List;
 public class ItemCarrinho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long idItensCarrinho;
     private Integer quantidade;
+    @JsonIgnore
     private BigDecimal precoUnitario;
 
 
@@ -41,10 +40,12 @@ public class ItemCarrinho {
 
     @ManyToOne
     @JoinColumn(name = "carrinho_id")
+    @JsonIgnore
     private Carrinho carrinho;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
+    @JsonIgnore
     private Clientes cliente;
 
     @ManyToOne

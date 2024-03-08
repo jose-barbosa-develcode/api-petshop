@@ -33,9 +33,11 @@ public class Carrinho {
         return idCarrinho;
     }
 
+
+
     @OneToMany(mappedBy = "carrinho", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<ItemCarrinho> itens;
+    private List<ItemCarrinho> itens = new ArrayList<>();
 
 
 }
